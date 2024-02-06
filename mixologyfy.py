@@ -117,7 +117,7 @@ if not (os.path.isfile(TEMPLATE_PATH) and os.access(TEMPLATE_PATH, os.R_OK)):
 # Reads environment variable "APP_DATABASE_URI" and validates that the value
 # starts with postgresql:// (that it's a valid connection URI)
 _log.debug('Checking if database connection URI is provided')
-DATABASE_URI = os.getenv('APP_DATABASE_URI', 'postgresql://dedikerad:postgres@db')
+DATABASE_URI = os.getenv('APP_DATABASE_URI', 'postgresql://debian:postgres@db')
 
 if not DATABASE_URI:
     _log.warning(
