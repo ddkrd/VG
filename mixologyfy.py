@@ -100,7 +100,7 @@ if not (SOURCE_URL.startswith('http://') or SOURCE_URL.startswith('https://')):
 # Validate web page template file -
 # Reads environment variable "APP_TEMPLATE_PATH" and validates that the
 # specified Jinja2 template file exists and is readable
-TEMPLATE_PATH = os.getenv('APP_TEMPLATE_PATH', '/app/index.html.jinja')
+TEMPLATE_PATH = os.getenv('APP_TEMPLATE_PATH', '/var/www/flaskapp/VG/index.html.jinja')
 
 _log.debug(
     f'Checking if HTML template file exist/is readable at "{TEMPLATE_PATH}"')
@@ -262,4 +262,4 @@ def return_cocktails():
 # If run as a program, start web server
 if __name__ == '__main__':
     _log.debug('Starting built-in web server')
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='127.0.0.1', port=8000)
