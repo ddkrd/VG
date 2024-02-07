@@ -117,14 +117,14 @@ if not (os.path.isfile(TEMPLATE_PATH) and os.access(TEMPLATE_PATH, os.R_OK)):
 # Reads environment variable "APP_DATABASE_URI" and validates that the value
 # starts with postgresql:// (that it's a valid connection URI)
 _log.debug('Checking if database connection URI is provided')
-DATABASE_URI = os.getenv('APP_DATABASE_URI', 'postgresql://debian:postgres@db')
+DATABASE_URI = os.getenv('APP_DATABASE_URI', '')
 
 if not DATABASE_URI:
     _log.warning(
         'No database connection string specified in environment variable '
         '"APP_DATABASE_URI" (required for "VG") :-/')
 
-    DATABASE_ENABLED = True
+    DATABASE_ENABLED = False
 
 elif not DATABASE_URI.startswith('postgresql://'):
     _log.error(
@@ -262,4 +262,4 @@ def return_cocktails():
 # If run as a program, start web server
 if __name__ == '__main__':
     _log.debug('Starting built-in web server')
-    app.run(host='0.0.0.0', port=1339)
+    app.run(host='0.0.0.0', port=80)
