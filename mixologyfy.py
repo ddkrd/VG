@@ -117,7 +117,7 @@ if not (os.path.isfile(TEMPLATE_PATH) and os.access(TEMPLATE_PATH, os.R_OK)):
 # Reads environment variable "APP_DATABASE_URI" and validates that the value
 # starts with postgresql:// (that it's a valid connection URI)
 _log.debug('Checking if database connection URI is provided')
-DATABASE_URI = os.getenv('APP_DATABASE_URI', '')
+DATABASE_URI = os.getenv('APP_DATABASE_URI', 'l')
 
 if not DATABASE_URI:
     _log.warning(
@@ -144,7 +144,6 @@ _log.debug('Trying to load/import third-party Python dependencies')
 
 try:
     from flask import Flask, redirect, render_template_string
-    from psycopg import connect as db_connect
     from requests import get as http_get
 
 except Exception as error_message:
