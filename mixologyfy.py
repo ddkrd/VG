@@ -175,7 +175,7 @@ def return_cocktails():
 
     return render_template_string(
         template_data,
-        cocktails=random.sample(COCKTAIL_DATA, len(COCKTAIL_DATA)),
+        cocktails=random.sample(COCKTAIL_DATA, len(COCKTAIL_DATA)))
 
 # -----------------------------------------------------------------------------
 # If run as a program, start web server
