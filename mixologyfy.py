@@ -181,4 +181,4 @@ def return_cocktails():
 # If run as a program, start web server
 if __name__ == '__main__':
     _log.debug('Starting built-in web server')
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0')
