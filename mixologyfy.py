@@ -160,7 +160,22 @@ app.jinja_env.lstrip_blocks = True
 app.jinja_env.trim_blocks = True
     
 # -----------------------------------------------------------------------------
+@app.route('/')
+def return_cocktails():
+    _log.info('Handling cocktail list request!')
 
+    try:
+        with open(TEMPLATE_PATH, 'r') as file_handle:
+            template_data=file_handle.read()
+
+    except Exception as error_message:
+        raise Exception(
+            'Failed to read HTML template file from '
+            f'"{TEMPLATE_PATH}": "{error_message}"')
+
+    return render_template_string(
+        template_data,
+        cocktails=random.sample(COCKTAIL_DATA, len(COCKTAIL_DATA)),
 
 # -----------------------------------------------------------------------------
 # If run as a program, start web server
