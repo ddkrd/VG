@@ -112,31 +112,7 @@ if not (os.path.isfile(TEMPLATE_PATH) and os.access(TEMPLATE_PATH, os.R_OK)):
 
     sys.exit(1)
 
-# -----------------------------------------------------------------------------
-# Validate database connection settings -
-# Reads environment variable "APP_DATABASE_URI" and validates that the value
-# starts with postgresql:// (that it's a valid connection URI)
-_log.debug('Checking if database connection URI is provided')
-DATABASE_URI = os.getenv('APP_DATABASE_URI', 'l')
 
-if not DATABASE_URI:
-    _log.warning(
-        'No database connection string specified in environment variable '
-        '"APP_DATABASE_URI" (required for "VG") :-/')
-
-    DATABASE_ENABLED = False
-
-elif not DATABASE_URI.startswith('postgresql://'):
-    _log.error(
-        'Value of environment variable "APP_DATABASE_URI" does not '
-        'start with "postgresql://" as required - exiting!')
-
-    sys.exit(1)
-
-else:
-    _log.debug('Database mode enabled!')
-    DATABASE_ENABLED = True
-    
 # -----------------------------------------------------------------------------
 # Import third-party Python dependencies -
 # Tries to load required Python modules that not included in standard library
@@ -149,28 +125,6 @@ try:
 except Exception as error_message:
     _log.error(f'Failed to import third-party Python module: {error_message}')
     sys.exit(1)
-
-# -----------------------------------------------------------------------------
-# Establish connection to PostgreSQL database, if enabled
-if DATABASE_ENABLED:
-    _log.debug('Trying to connect to database')
-
-    try:
-        DB = db_connect(DATABASE_URI)
-        DB.autocommit = True
-        _log.debug('Connected to database: ' + DB.info.dsn)
-
-        _log.debug('Initializing database tables, if needed')
-        DB.execute(
-            'CREATE TABLE IF NOT EXISTS favorites '
-            '(id SERIAL PRIMARY KEY, '
-            'time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, '
-            'name VARCHAR(50))')
-
-    except Exception as error_message:
-        _log.error(f'Failed to connect to/setup database: "{error_message}"')
-        sys.exit(1)       
-
 # -----------------------------------------------------------------------------
 _log.info(f'Fetching cocktail recipe data from "{SOURCE_URL}"')
 
@@ -204,25 +158,6 @@ _log.debug('Setting up Flask application')
 app = Flask('mixologyfy')
 app.jinja_env.lstrip_blocks = True
 app.jinja_env.trim_blocks = True
-
-# -----------------------------------------------------------------------------
-@app.route('/add_favorite/<cocktail_name>')
-def add_to_favorites(cocktail_name):
-    _log.info(f'Trying to add cocktail "{cocktail_name}" to favorites')
-
-    if not DATABASE_ENABLED:
-        _log.warning('"Database mode" is not enabled, cannot store favorites')
-        return 'Sorry - cannot add drink to favorites as database is disabled!'
-
-    try:
-        DB.execute('INSERT INTO favorites (name) VALUES (%s)', (cocktail_name,))
-
-    except Exception as error_message:
-        raise Exception(
-            f'Failed to add cocktail "{cocktail_name}" '
-            f'as favorite to database: "{error_message}"')
-
-    return redirect('/', code=302)
     
 # -----------------------------------------------------------------------------
 @app.route('/')
