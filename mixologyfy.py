@@ -160,37 +160,7 @@ app.jinja_env.lstrip_blocks = True
 app.jinja_env.trim_blocks = True
     
 # -----------------------------------------------------------------------------
-@app.route('/')
-def return_cocktails():
-    _log.info('Handling cocktail list request!')
 
-    favorites = []
-    if DATABASE_ENABLED:
-        try:
-            with DB.cursor() as cursor:
-                cursor.execute('SELECT DISTINCT name FROM favorites')
-                db_results = cursor.fetchall()
-
-            for db_result in db_results:
-                favorites.append(db_result[0])
-
-        except Exception as error_message:
-            raise Exception(
-                f'Failed to fetch favorites from database: "{error_message}"')
-
-    try:
-        with open(TEMPLATE_PATH, 'r') as file_handle:
-            template_data=file_handle.read()
-    
-    except Exception as error_message:
-        raise Exception(
-            'Failed to read HTML template file from '
-            f'"{TEMPLATE_PATH}": "{error_message}"')
-    
-    return render_template_string(
-        template_data,
-        cocktails=random.sample(COCKTAIL_DATA, len(COCKTAIL_DATA)),
-        favorites=favorites, database_enabled=DATABASE_ENABLED)
 
 # -----------------------------------------------------------------------------
 # If run as a program, start web server
